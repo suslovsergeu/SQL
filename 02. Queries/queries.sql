@@ -40,3 +40,18 @@ SELECT *
 FROM users
 WHERE email LIKE '%@gmail.com'
 
+----- PRODUCTS table
+-- 1. NUMBER OF PRODUCTS BY CATEGORY + AVG RATING
+SELECT category,
+	   COUNT(id) ttl,
+	   ROUND(AVG(rating)::numeric, 2) avg_rating
+FROM products
+GROUP BY category
+ORDER BY COUNT(id) DESC;
+
+-- 2. PRICE BY VENDOR
+SELECT vendor,
+	   ROUND(AVG(price)::numeric, 2) avg_price
+FROM products
+GROUP BY vendor
+ORDER BY AVG(price) DESC;
