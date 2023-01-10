@@ -29,8 +29,10 @@ FROM transactions;
 
 SELECT COUNT(*)
 FROM
-	(SELECT DISTINCT *
-	 FROM transactions) AS tmp;
+	(
+		SELECT DISTINCT *
+	    FROM transactions
+	 ) AS tmp;
 -- 3455 rows
 --1NF CONFIRMED 
 
@@ -43,14 +45,15 @@ FROM transactions;
 
 CREATE TABLE customers AS
 SELECT DISTINCT *
-FROM (
-	SELECT customerid,
-		   firstname,
-		   surname,
-		   shipping_state,
-		   loyalty_discount
-	FROM transactions
-) AS TMP
+FROM 
+	(
+		SELECT customerid,
+			   firstname,
+			   surname,
+			   shipping_state,
+			   loyalty_discount
+		FROM transactions
+	) AS tmp;
 
 SELECT *
 FROM customers
@@ -76,7 +79,7 @@ FROM
 			   description,
 			   retail_price
 		FROM transactions
-	) AS tmp
+	) AS tmp;
 )
 
 SELECT *
