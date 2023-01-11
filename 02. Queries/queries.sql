@@ -55,3 +55,33 @@ SELECT vendor,
 FROM products
 GROUP BY vendor
 ORDER BY AVG(price) DESC;
+
+----- ORDERS table
+-- STAT BY ID
+SELECT product_id,
+	   ROUND(AVG(total)::numeric, 1),
+	   ROUND(AVG(discount)::numeric, 1),
+	   ROUND((AVG(discount) / AVG(total))::numeric, 2) prct
+FROM orders
+GROUP BY product_id
+HAVING AVG(discount) > 0
+ORDER BY AVG(total) DESC;
+
+----- MIX FROM TABLES
+-- 1. ORDERS BY CLIENT
+WITH tab AS (
+SELECT u.id,
+	   u.name,
+	   p.title product,
+	   ROUND(o.total::numeric, 0) total,
+	   o.created_at
+FROM users u
+	 INNER JOIN orders o ON u.id = o.user_id
+	 LEFT JOIN products p ON o.product_id = p.id
+ORDER BY u.id, o.created_at
+)
+
+SELECT *,
+	   LAG(created_at, 1, NULL) OVER (PARTITION BY id ORDER BY created_at) previous_order,
+	   created_at - LAG(created_at, 1, NULL) OVER (PARTITION BY id ORDER BY created_at) break
+FROM tab
